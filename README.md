@@ -16,7 +16,7 @@ remotes::install_github("sygstat/piw")
 #### Load Datasets
 
 If you would like to download the dataset used in this example, please contact us via email.
-(jspark@chonnam.ac.kr or syg.stat@gmail.com)
+(jspark@chonnam.ac.kr or syg.stat@gmail.com or shinyire87@gmail.com)
 
 ```r
 library(piw)
