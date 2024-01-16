@@ -376,6 +376,6 @@ rtlv.table(return.level.obj = sce.ensembled.bc$return.level,
 
 ## Citation
 
-...
+Shin, Y., Shin, Y., Hong, J., Kim, M. K., Byun, Y. H., Boo, K. O., ... & Park, J. S. (2021). Future projections and uncertainty assessment of precipitation extremes in the Korean Peninsula from the CMIP6 ensemble with a statistical framework. Atmosphere, 12(1), 97.
 
 -----
