@@ -1,7 +1,7 @@
 # PI-Weights-Rpackage
 
-
-An R package for Generalized L-moments Estimation
+Future Projections and Uncertainty Assessment of Precipitation Extremes in the Korean Peninsula from the CMIP6 Ensemble with a Statistical Framework.
+[https://www.mdpi.com/2073-4433/12/1/97]
 
 ## Installation
 
