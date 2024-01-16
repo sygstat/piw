@@ -2,16 +2,21 @@ Package: piw
 Title: Performance-Independence Weight.
 Version: 0.1.0
 Authors@R: 
-    person(given = "Yonggwan",
-           family = "Shin",
-           role = c("aut", "cre"),
-           email = "syg.stat@gmail.com",
-           comment = c(ORCID = "0000-0001-6966-6511"))
-    person(given = "Jeong-Soo",
-           family = "Park",
-           role = c("aut", "cre"),
-           email = "jspark@chonnam.ac.kr",
-           comment = c(ORCID = "0000-0002-8460-4869"))
+      person(given = "Yonggwan",
+             family = "Shin",
+             role = c("aut", "cre"),
+             email = "syg.stat@gmail.com",
+             comment = c(ORCID = "0000-0001-6966-6511"))
+      person(given = "Yire",
+             family = "Shin",
+             role = c("aut", "cre"),
+             email = "shinyire87@gmail.com",
+             comment = c(ORCID = "0000-0003-1297-5430"))
+      person(given = "Jeong-Soo",
+             family = "Park",
+             role = c("aut", "cre", "ths"),
+             email = "jspark@chonnam.ac.kr",
+             comment = c(ORCID = "0000-0002-8460-4869"))
 Description: Performance-Independence Weight Ensemble of Return Level and Return Period For the Extreme Climate Dataset – R Package
 License: GPL (>= 3)
 Encoding: UTF-8
