@@ -29,4 +29,4 @@ Imports: lmom, pbapply, dplyr, MCMCpack, abind, parallel, pbmcapply,
 NeedsCompilation: no
 Packaged: 2021-08-13 09:39:42 UTC; rstudio
 Author: Jeong-Soo Park [aut, cre] (<https://orcid.org/0000-0002-8460-4869>)
-Maintainer: Jeong-Soo Park <jspark@chonnam.ac.kr>
+Maintainer: Yonggwan Shin <syg.stat@gmail.com>
