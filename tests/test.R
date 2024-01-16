@@ -1,19 +1,4 @@
-# PI-Weights-Rpackage
 
-
-An R package for Generalized L-moments Estimation
-
-## Installation
-
-Install the latest development version (on GitHub) via `{remotes}`:
-
-``` r
-remotes::install_github("sygstat/piw")
-```
-
-## Getting started
-
-```r
 if(FALSE){
   # Setting -----------------------------------------------------------------
   library(piw)
@@ -23,7 +8,7 @@ if(FALSE){
   obs.file.path <- 
     "not_importing_data/2020.10.05/OBS.rds"
   
-  # model data path
+  # model 자료 경로
   histDir.bc <- "not_importing_data/2020.10.05/historical"
   s245Dir.bc <- "not_importing_data/2020.10.05/ssp245"
   s370Dir.bc <- "not_importing_data/2020.10.05/ssp370"
@@ -35,7 +20,7 @@ if(FALSE){
   s585Dir <- "not_importing_data/2020.10.07/CMIP6_EastAsia_variables_nbc2/ssp585"
   
   
-  # save path for figures
+  # 그림 저장 경로
   eps.save.path <- "not_importing_output/eps/"
   pdf.save.path <- "not_importing_output/pdf/"
   png.save.path <- "not_importing_output/png/"
@@ -72,12 +57,19 @@ if(FALSE){
   
   # Normalization -----------------------------------------------------------
   
+  #'  기존의 연구에서는 rt.lv <- c(2, 5, 10, 20, 30, 50, 100) 을 이용하여 정규화 수행.
   
   obs.tilde <- tilde.normalization(obs, his, target.rtlv = obs.rtlv)
   his.tilde <- tilde.normalization(obs, his, target.rtlv = his.rtlv)
   
   
   # Performance Weight ------------------------------------------------------
+  
+  #'
+  #'  기존 연구에서는 sigma.D 를 동아시아 전체 자료를 이용해서 결정함.
+  #'  어떤 자료를 이용하는냐에 따라 sigma.D 의 값이 달라질것임.
+  #'  예를 들면 한반도 자료만을 이용해서 sigma.D 를 계산한것과 
+  #'  동아시아 전체 자료를 이용해서 sigma.D를 계산한 것은 다를 수 있음.
   
   
   ## Sigma.D
@@ -90,11 +82,18 @@ if(FALSE){
   
   sigma.D <- res.sigma.d$sigma.D
   
+  ## 모델별 Perf-weights 값은 지역별로 다름.
+  
   ## Weights
   perf.weight.res <- calc.performance.weights(ref=obs.tilde, model = his.tilde, sigma.D)
   perf.weight <- perf.weight.res$weight.df
   
   # Independence Weight -----------------------------------------------------
+  
+  ## 기존 연구에서는 sigma.S 를 동아시아 전체 자료를 이용해서 결정함.
+  ## 어떤 자료를 이용하는냐에 따라 sigma.S 의 값이 달라질것임.
+  ## 예를 들면 한반도 자료만을 이용해서 sigma.S 를 계산한것과 
+  ## 동아시아 전체 자료를 이용해서 sigma.S를 계산한 것은 다를 수 있음.
   
   # Find Optimal Sigma.S from Entropy Approach
   system.time({
@@ -120,12 +119,16 @@ if(FALSE){
   # Visualization
   plot.sigma.s.res(res.sigma.s)
   
+  ## perf-weights 와는 다르게 모델별 ind-weights 는 전 지역에 대해 동일한 값임.
   ## Weights
   indep.weight <- res.sigma.s$weights
   
   
   # PI Weight ---------------------------------------------------------------
-
+  
+  ## PI-weight 를 계산하기 위해 사용된 자료는 모두 bias-correction을 하지 않은 자료임.
+  ## bias-correction을 적용한 자료를 사용할 경우, 모든 모델이 등가중치를 가지게 되어 
+  
   pi.weight <- calc.pi.weight(perf.weight_ = perf.weight, indep.weight_ = indep.weight)
   
 
@@ -134,6 +137,10 @@ if(FALSE){
   plot.weights(perf.weight, indep.weight, pi.weight) +
     ggplot2::ggtitle(as.expression(bquote(sigma[S] ~ "=" ~ .(sprintf("%.2f",sigma.s)) ~ "," ~ sigma[D] ~ "=" ~ .(sprintf("%.2f",sigma.D )))))
   
+  
+  #### 여기까지 pi-weight 계산 끝
+  
+  #### 이제부터 한반도 격자에 대해서 pi-weight 앙상블 적용
 
   # Ensemble RtLv & RtPd ----------------------------------------------------
   
@@ -161,22 +168,22 @@ if(FALSE){
   
   # Return Level boxplot ----------------------------------------------------
   
-  # obs : return level 
+  # 한반도 지역의 obs : return level 계산
   obs <- readata.fromFilePath(obs.file.path, 1973:2010, "AMP1", kr.grids, rfa9=TRUE)
   obs.rtlv <- rtlv.multi.var(obs, list(lmom::pelgev), list(lmom::quagev))
   
-  # his : return level 
+  # 한반도 지역 his : return level 계산
   his <- readata.fromDirPath(histDir, 1973:2010, "AMP1", kr.grids, rfa9 = TRUE)
   his.rtlv <- rtlv.multi.var(his, list(lmom::pelgev), list(lmom::quagev))
   
-  # his : mean of return level for boxplot
+  # 상자그림에 보여줄 his : return level의 평균 계산
   his.ensembled <- 
     lapply(his.rtlv, function(x){
       weighted.sum(rtlv.list = x, weights = "equal")
     })
   
   # >> Main : Figure 7 ------------------------------------
-  # 20y return level boxplot
+  # 20y return level 상자그림 그리기
   rtlv.boxplot(ref.rtlv = obs.rtlv, 
                his.rtlv.ensembled = his.ensembled,
                sce.rtlv.ensembled = sce.ensembled.bc$return.level,
@@ -192,7 +199,7 @@ if(FALSE){
   
 
   # >> SM : Figure S 3 ------------------------------------
-  # 50y return level boxplot
+  # 50y return level 상자그림 그리기
   rtlv.boxplot(ref.rtlv = obs.rtlv, 
                his.rtlv.ensembled = his.ensembled,
                sce.rtlv.ensembled = sce.ensembled.bc$return.level,
@@ -233,6 +240,7 @@ if(FALSE){
 
   # Variance based on BMA ---------------------------------------------------
   
+  # 분산 계산, 논문에서는 n.boots = 500 으로 했음.
   var.rtlv.pi <- var.rtlv(sce.ensembled.bc, n.boots = 500, random.seed = 121212)
   
 
@@ -257,31 +265,33 @@ if(FALSE){
   
   z_ = c(seq(50, 500, 50), 750, 1000)
   
+  # 한국 격자에 대한 가중값만 뽑아서 list 형태로 변환
   pi.weight.list <-
     split(x = pi.weight %>% dplyr::select(-model), f = pi.weight$model) %>%
     lapply(function(x){
       x %>% dplyr::select(kr.grids) %>% t()
     })
   
+  # AMP1 자료만 사용, RFA 적용하지 않은 채로, 한국 격자에 대해서만
   obs <- readata.fromFilePath(obs.file.path, 
                               filter.period = 1973:2010, 
                               variable_names = 'AMP1', 
                               filter.grid = kr.grids, 
                               rfa9 = F)
-  # clac prob
+  # 확률 계산
   obs.exc.prob <- 
     exceedence.prob.multi.var(data.obj = obs, 
                               pfns = list(lmom::pelgev),
                               cdfns = list(lmom::cdfgev), 
                               z = z_)
   
-
+  # AMP1 자료만 사용, RFA 적용하지 않은 채로, 한국 격자에 대해서만
   his.bc <- readata.fromDirPath(histDir.bc, 
                                 filter.period = 1973:2010, 
                                 variable_names = 'AMP1', 
                                 filter.grid = kr.grids, 
                                 rfa9 = F)
-
+  # historical 자료 확률 계산하고 앙상블 
   his.bc.exc.prob.ensembled <-  
     exceedence.prob.multi.var(data.obj = his.bc, 
                               pfns = list(lmom::pelgev),
@@ -290,7 +300,8 @@ if(FALSE){
       weighted.sum(p.var.model, pi.weight.list)
     })
   
-
+  # scenario 자료,  한국 격자에 대해서만, RFA 하지 않음.
+  # 자료 읽고 바로 확률 계산해서 앙상블 적용 
   sce.bc.exc.prob.ensembled <- 
     ## 미래 시나리오 디렉토리별
     lapply(c(s245Dir.bc, s370Dir.bc, s585Dir.bc), function(sce){
@@ -313,7 +324,7 @@ if(FALSE){
       })
     }) %>% `names<-`(c('s245','s370','s585'))
   
-  # exceedence probability 
+  # exceedence probability 결과 모두 합치기
   exc.prob.all <- 
     rbind(
       # obs 그림을 p1, p2, p3 에 똑같이 넣기 위해..
@@ -337,7 +348,7 @@ if(FALSE){
         `colnames<-`(c('loc','z','value','var','period','sce'))
     ) %>% dplyr::mutate(z.n = as.numeric(gsub(pattern = 'z', replacement = '', x = z)))
   
-  # median
+  # 모든 격자에 대해 median 값 계산
   exc.prob.all.med <- exc.prob.all %>% 
     dplyr::select(-loc, -z) %>% 
     dplyr::group_by(var, sce, period, z.n) %>% 
@@ -368,13 +379,3 @@ if(FALSE){
   
   
 }
-```
-## Learn more
-
-...
-
-## Citation
-
-...
-
------
